@@ -4,16 +4,8 @@ Pi skill for reading Figma node data from a Figma URL.
 
 ## Install
 
-Clone/copy this repo into a Pi skill location, for example:
-
 ```bash
-~/.pi/agent/skills/figma-node
-```
-
-Or install from git once hosted:
-
-```bash
-pi install git:<repo-url>
+pi install git@github.com:je-boska/pi-figma-node-skill.git
 ```
 
 ## Auth

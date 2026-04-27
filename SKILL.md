@@ -44,7 +44,10 @@ The script:
 - converts URL node id `12-34` to API node id `12:34`
 - fetches node JSON to `/tmp/figma-node.json`
 - writes compact summary to `/tmp/figma-node-summary.json`
+- prints compact summary to stdout
 - optionally fetches render URL with `--image`
+
+Use `--depth N` to control compact tree depth. Default: `4`. Increase only if `truncatedChildren` shows missing descendants.
 
 ## Manual URL parsing
 
@@ -179,16 +182,18 @@ jq -r '.images[]' /tmp/figma-image.json
 ## Frontend implementation workflow
 
 1. Fetch node JSON with helper.
-2. Inspect summary first.
-3. If needed, inspect `/tmp/figma-node.json` with focused `jq` queries.
-4. Extract dimensions, layout mode, spacing, padding, typography, colors, effects, hierarchy.
-5. Compare with existing component files.
-6. Implement using project conventions.
-7. Mark guesses as `(assumption)` when not directly backed by Figma data.
+2. Inspect compact summary first. Avoid pasting raw Figma JSON into chat.
+3. If `truncatedChildren` appears, rerun helper with higher `--depth` or inspect a smaller child node.
+4. If needed, inspect `/tmp/figma-node.json` with focused `jq` queries.
+5. Extract dimensions, layout mode, spacing, padding, typography, colors, effects, hierarchy.
+6. Compare with existing component files.
+7. Implement using project conventions.
+8. Mark guesses as `(assumption)` when not directly backed by Figma data.
 
 ## Notes
 
 - Figma API uses `:` in node ids. URL uses `-`.
-- Large nodes produce large JSON. Use summaries first.
+- Large nodes produce large JSON. Use compact summaries first.
+- Compact summary uses hex colors, rounded bbox arrays, layout essentials, text styles, and `truncatedChildren` to save tokens.
 - Do not edit frontend until node data is inspected.
 - Do not expose token in code, logs, client bundles, or final answers.
